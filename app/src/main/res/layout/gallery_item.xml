@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/item_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        tools:ignore="ContentDescription" />
+
+    <RelativeLayout
+        android:id="@+id/caption"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_gravity="bottom"
+        android:background="#50000000"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/caption_title"
+            style="@style/GalleryCaption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="9H-CGH Elit Avia Dassault Falcon 50EX" />
+
+        <TextView
+            android:id="@+id/caption_meta"
+            style="@style/GalleryMeta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/caption_title"
+            android:layout_marginTop="8dp"
+            android:lines="2"
+            tools:text="Photo by Karl Dittlbacher taken 16 June 2017 at Salzburg WA Mozart SZG Lows Austria" />
+
+    </RelativeLayout>
+
+</FrameLayout>
