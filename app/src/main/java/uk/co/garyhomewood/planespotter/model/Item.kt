@@ -38,7 +38,7 @@ class Item: Parcelable {
         get() = description.substring(description.indexOf("<br/>") + 5).trim { it <= ' ' }
                 .replace("\\n".toRegex(), " ")
                 .replace("[^a-zA-Z0-9 ]".toRegex(), "")
-                .replace(" 2".toRegex(), " ")
+                .replace(" {2,}".toRegex(), " ")
 
     var originalUrl: String = ""
         get() = thumbnail.url.replace("thumbnail", "original")
