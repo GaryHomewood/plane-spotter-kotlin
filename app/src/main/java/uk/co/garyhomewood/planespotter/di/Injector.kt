@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit
 class Injector {
 
     companion object {
-        private val BASE_URL = "https://www.planespotters.net/Aviation_Photos/"
+        private val BASE_URL = "https://www.planespotters.net/photos/latest/"
         private val PRAGMA = "Pragma"
         private val CACHE_CONTROL = "Cache-Control"
         private val USER_AGENT = "User-Agent"
@@ -40,14 +40,14 @@ class Injector {
                 val builder = chain.request().newBuilder()
                         .addHeader(USER_AGENT, USER_AGENT_VALUE)
 
-                if (PlaneSpotterApp.instance.hasNetwork()) {
-                    request = builder.build()
+                request = if (PlaneSpotterApp.instance.hasNetwork()) {
+                    builder.build()
                 } else {
                     val cacheControl = CacheControl.Builder()
                             .maxStale(7, TimeUnit.DAYS)
                             .build()
 
-                    request = builder
+                    builder
                             .cacheControl(cacheControl)
                             .build()
                 }

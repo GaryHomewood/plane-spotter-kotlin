@@ -4,12 +4,12 @@ import io.realm.RealmObject
 import java.util.*
 
 /**
- * RSS item as saved to Realm db
+ * Atom RSS entry as saved to Realm db
  */
 open class Favourite: RealmObject() {
     var title: String = ""
+    var content: String = ""
     var description: String = ""
-    var subject: String = ""
-    var thumbnailUrl: String = ""
+    var originalUrl: String = ""
     var createdDate: Date = Date()
 }

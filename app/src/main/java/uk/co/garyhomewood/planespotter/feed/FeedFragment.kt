@@ -14,7 +14,7 @@ import uk.co.garyhomewood.planespotter.PlaneSpotterApp
 import uk.co.garyhomewood.planespotter.R
 import uk.co.garyhomewood.planespotter.di.Injector
 import uk.co.garyhomewood.planespotter.gallery.GalleryActivity
-import uk.co.garyhomewood.planespotter.model.Item
+import uk.co.garyhomewood.planespotter.model.atom.Entry
 
 /**
  *
@@ -24,13 +24,14 @@ class FeedFragment : Fragment(), FeedInterface.View {
     private val KEY_ITEMS = "KEY_ITEMS"
     private val KEY_SELECTED_ITEM = "KEY_SELECTED_ITEM"
 
-    var favourites: Boolean = false
-    var userActionsListener: FeedInterface.UserActions? = null
-    var itemClickListener = object : FeedAdapter.ItemClickListener {
-        override fun onItemClick(planes: List<Item>, selectedItem: Int) {
+    private var favourites: Boolean = false
+    private var itemClickListener = object : FeedAdapter.ItemClickListener {
+        override fun onItemClick(planes: List<Entry>, selectedItem: Int) {
             userActionsListener?.showGallery(planes, selectedItem)
         }
     }
+
+    var userActionsListener: FeedInterface.UserActions? = null
 
     companion object {
         fun newInstance(): FeedFragment {
@@ -38,8 +39,8 @@ class FeedFragment : Fragment(), FeedInterface.View {
         }
 
         fun newInstance(showFavourites: Boolean): FeedFragment {
-            val frag: FeedFragment = FeedFragment()
-            val args: Bundle = Bundle()
+            val frag = FeedFragment()
+            val args = Bundle()
             args.putBoolean("favourites", showFavourites)
             frag.arguments = args
             return frag
@@ -64,9 +65,9 @@ class FeedFragment : Fragment(), FeedInterface.View {
         loadData()
     }
 
-    fun loadData() = if (favourites) userActionsListener?.loadFavourites() else userActionsListener?.loadFeed()
+    private fun loadData() = if (favourites) userActionsListener?.loadFavourites() else userActionsListener?.loadFeed()
 
-    override fun showItems(items: List<Item>) {
+    override fun showItems(items: List<Entry>) {
         val numberOfColumns: Int = if (resources.configuration.orientation == OrientationHelper.VERTICAL) 2 else 3
         item_list.layoutManager = GridLayoutManager(context, numberOfColumns)
         item_list.adapter = FeedAdapter(items, itemClickListener)
@@ -76,8 +77,8 @@ class FeedFragment : Fragment(), FeedInterface.View {
         refresh_layout.post { refresh_layout.isRefreshing = active }
     }
 
-    override fun showGallery(items: List<Item>, selectedItem: Int) {
-        val i: Intent = Intent(context, GalleryActivity::class.java)
+    override fun showGallery(items: List<Entry>, selectedItem: Int) {
+        val i = Intent(context, GalleryActivity::class.java)
         i.putExtra(KEY_ITEMS, Parcels.wrap(items))
         i.putExtra(KEY_SELECTED_ITEM, selectedItem)
         startActivity(i)

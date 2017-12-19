@@ -37,7 +37,7 @@ class PlaneSpotterApp : Application() {
         return instance.isConnected()
     }
 
-    fun isConnected(): Boolean {
+    private fun isConnected(): Boolean {
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = cm.activeNetworkInfo
         return networkInfo != null && networkInfo.isConnectedOrConnecting

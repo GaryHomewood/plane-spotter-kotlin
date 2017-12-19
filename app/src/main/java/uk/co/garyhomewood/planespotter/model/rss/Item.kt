@@ -1,4 +1,4 @@
-package uk.co.garyhomewood.planespotter.model
+package uk.co.garyhomewood.planespotter.model.rss
 
 import android.os.Parcelable
 import org.simpleframework.xml.Attribute
@@ -28,7 +28,7 @@ class Item: Parcelable {
         @Element(name = "subject")
         set
 
-    var thumbnail: Item.Thumbnail = Thumbnail()
+    var thumbnail: Thumbnail = Thumbnail()
         @Element(name = "thumbnail", required = false)
         get
         @Element(name = "thumbnail", required = false)
@@ -64,7 +64,7 @@ class Item: Parcelable {
                     title = source.readString()
                     description = source.readString()
                     subject = source.readString()
-                    thumbnail = source.readTypedObject<Item.Thumbnail>(Item.Thumbnail.CREATOR)
+                    thumbnail = source.readTypedObject<Thumbnail>(Thumbnail.CREATOR)
                 }
                 return item
             }
@@ -85,7 +85,7 @@ class Item: Parcelable {
         companion object {
             val CREATOR: Parcelable.Creator<Thumbnail> = object : Parcelable.Creator<Thumbnail> {
                 override fun createFromParcel(source: android.os.Parcel): Thumbnail {
-                    val thumbnail = Item.Thumbnail()
+                    val thumbnail = Thumbnail()
                     thumbnail.url = source.readString()
                     return thumbnail
                 }

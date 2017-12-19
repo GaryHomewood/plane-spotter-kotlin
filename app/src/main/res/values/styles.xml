@@ -1,19 +1,24 @@
 <resources>
-    <style name="AppTheme" parent="Base.AppTheme" />
-
     <style name="Base.AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">#000000</item>
         <item name="colorPrimaryDark">#212121</item>
+        <item name="colorPrimary">#212121</item>
         <item name="android:windowBackground">@color/background</item>
-        <!--<item name="android:windowTranslucentStatus">true</item>-->
         <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
+    <style name="AppTheme" parent="Base.AppTheme" />
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="colorPrimary">#111</item>
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="GalleryTheme" parent="Base.AppTheme">
+        <!-- set both windowTranslucentNavigation and statusBarColor -->
+        <!-- to get full screen immersive mode -->
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:statusBarColor">@color/statusBar</item>
+    </style>
 
     <style name="GalleryCaption">
         <item name="android:textSize">14sp</item>

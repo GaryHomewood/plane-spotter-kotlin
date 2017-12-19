@@ -8,12 +8,13 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.feed_item.view.*
 import uk.co.garyhomewood.planespotter.R
 import uk.co.garyhomewood.planespotter.feed.FeedAdapter.ViewHolder
-import uk.co.garyhomewood.planespotter.model.Item
+import uk.co.garyhomewood.planespotter.model.atom.Entry
 
 /**
  *
  */
-class FeedAdapter(var planes: List<Item>, var itemClickListener: FeedAdapter.ItemClickListener) : android.support.v7.widget.RecyclerView.Adapter<ViewHolder>() {
+class FeedAdapter(var planes: List<Entry>,
+                  private var itemClickListener: FeedAdapter.ItemClickListener) : android.support.v7.widget.RecyclerView.Adapter<ViewHolder>() {
 
     var context : android.content.Context? = null
 
@@ -31,7 +32,7 @@ class FeedAdapter(var planes: List<Item>, var itemClickListener: FeedAdapter.Ite
 
         var itemClickListener : FeedAdapter.ItemClickListener? = null
 
-        fun bindPlane(plane: Item, listener: FeedAdapter.ItemClickListener) {
+        fun bindPlane(plane: Entry, listener: FeedAdapter.ItemClickListener) {
             with(itemView) {
                 item_title.text = plane.title
                 item_description.text = plane.description
@@ -50,6 +51,6 @@ class FeedAdapter(var planes: List<Item>, var itemClickListener: FeedAdapter.Ite
     }
 
     interface ItemClickListener {
-        fun onItemClick(planes : List<Item>, selectedItem : Int)
+        fun onItemClick(planes : List<Entry>, selectedItem : Int)
     }
 }

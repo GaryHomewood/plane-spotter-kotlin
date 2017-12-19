@@ -38,21 +38,17 @@ class FeedActivity : AppCompatActivity() {
 
     inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
-        override fun getItem(position: Int): Fragment {
-            if (position == 0) {
-                return FeedFragment.newInstance()
-            } else
-                return FeedFragment.newInstance(showFavourites = true)
-        }
+        override fun getItem(position: Int): Fragment = if (position == 0) {
+            FeedFragment.newInstance()
+        } else
+            FeedFragment.newInstance(showFavourites = true)
 
         override fun getCount(): Int = 2
 
-        override fun getPageTitle(position: Int): CharSequence {
-            when (position) {
-                0 -> return "Latest"
-                1 -> return "Favourites"
-                else -> return ""
-            }
+        override fun getPageTitle(position: Int): CharSequence = when (position) {
+            0 -> "Latest"
+            1 -> "Favourites"
+            else -> ""
         }
     }
 }

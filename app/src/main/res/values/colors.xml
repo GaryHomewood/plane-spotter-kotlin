@@ -5,4 +5,6 @@
     <color name="selected_text_color">#fff</color>
     <color name="tab_indicator">#dd2c00</color>
     <color name="tab_bg">#212121</color>
+    <color name="statusBar">#66000000</color>
+    <color name="transparent">#00000000</color>
 </resources>

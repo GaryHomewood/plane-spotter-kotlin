@@ -1,4 +1,4 @@
-package uk.co.garyhomewood.planespotter.model
+package uk.co.garyhomewood.planespotter.model.rss
 
 import org.simpleframework.xml.ElementList
 import org.simpleframework.xml.Root

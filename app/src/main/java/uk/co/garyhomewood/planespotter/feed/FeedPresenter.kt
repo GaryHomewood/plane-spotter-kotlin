@@ -9,14 +9,26 @@ import io.realm.Sort
 import timber.log.Timber
 import uk.co.garyhomewood.planespotter.api.PlanesService
 import uk.co.garyhomewood.planespotter.model.Favourite
-import uk.co.garyhomewood.planespotter.model.Item
-import uk.co.garyhomewood.planespotter.model.Rss
+import uk.co.garyhomewood.planespotter.model.atom.Entry
+import uk.co.garyhomewood.planespotter.model.atom.Feed
 
-class FeedPresenter(var view: FeedInterface.View, var service: PlanesService, var realm: Realm) : FeedInterface.UserActions {
+class FeedPresenter(var view: FeedInterface.View,
+                    private var service: PlanesService,
+                    var realm: Realm) : FeedInterface.UserActions {
 
-    /**
-     * Load favourites from Realm db
-     */
+    override fun loadFeed() {
+        val call: Observable<Feed> = service.getPlanes()
+        call.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { view.showProgressIndicator(true) }
+                .doFinally { view.showProgressIndicator(false) }
+                .subscribe({
+                    feed: Feed? -> view.showItems(feed?.entries!!)
+                }, {
+                    t: Throwable? -> Timber.e(t)
+                })
+    }
+
     override fun loadFavourites() {
         view.showProgressIndicator(true)
 
@@ -24,14 +36,13 @@ class FeedPresenter(var view: FeedInterface.View, var service: PlanesService, va
                 .where(Favourite::class.java)
                 ?.findAllSorted("createdDate", Sort.DESCENDING) as RealmResults<Favourite>
 
-        val items: List<Item> = favourites.map { favourite ->
-            val item: Item = Item()
+        val items: List<Entry> = favourites.map { favourite ->
+            val item = Entry()
             with(item) {
                 title = favourite.title
+                content = favourite.content
                 description = favourite.description
-                thumbnail = Item.Thumbnail()
-                thumbnail.url = favourite.thumbnailUrl
-                subject = favourite.subject
+                originalUrl = favourite.originalUrl
             }
             item
         }
@@ -40,26 +51,7 @@ class FeedPresenter(var view: FeedInterface.View, var service: PlanesService, va
         view.showProgressIndicator(false)
     }
 
-    /**
-     * Load RSS feed
-     */
-    override fun loadFeed() {
-        val call: Observable<Rss> = service.getPlanes()
-
-        call.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { view.showProgressIndicator(true) }
-                .doFinally { view.showProgressIndicator(false) }
-                .subscribe({
-                    rss: Rss? ->
-                    view.showItems(rss?.channel?.items!!)
-                }, {
-                    t: Throwable? ->
-                    Timber.e(t)
-                })
-    }
-
-    override fun showGallery(items: List<Item>, selectedItem: Int) {
+    override fun showGallery(items: List<Entry>, selectedItem: Int) {
         view.showGallery(items, selectedItem)
     }
 }

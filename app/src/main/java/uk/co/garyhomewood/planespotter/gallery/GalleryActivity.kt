@@ -17,7 +17,7 @@ import timber.log.Timber
 import uk.co.garyhomewood.planespotter.PlaneSpotterApp
 import uk.co.garyhomewood.planespotter.R
 import uk.co.garyhomewood.planespotter.model.Favourite
-import uk.co.garyhomewood.planespotter.model.Item
+import uk.co.garyhomewood.planespotter.model.atom.Entry
 import java.util.*
 
 
@@ -26,14 +26,16 @@ import java.util.*
  */
 class GalleryActivity : AppCompatActivity() {
 
-    val KEY_ITEMS = "KEY_ITEMS"
-    val KEY_SELECTED_ITEM = "KEY_SELECTED_ITEM"
-    val UI_ANIMATION_DELAY: Long = 100
+    private val KEY_ITEMS = "KEY_ITEMS"
+    private val KEY_SELECTED_ITEM = "KEY_SELECTED_ITEM"
+    private val UI_ANIMATION_DELAY: Long = 100
 
-    var menu: Menu? = null
     var isFullscreen = false
-    val fullScreenHandler = Handler()
-    val hideUI: Runnable = Runnable {
+    val captionFullscreenOffset: Float = 100 * Resources.getSystem().displayMetrics.density
+
+    private var menu: Menu? = null
+    private val fullScreenHandler = Handler()
+    private val hideUI: Runnable = Runnable {
         supportActionBar?.hide()
         view_pager.systemUiVisibility = (View.SYSTEM_UI_FLAG_LOW_PROFILE
                 or View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -42,15 +44,14 @@ class GalleryActivity : AppCompatActivity() {
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
     }
-    val showUI: Runnable = Runnable {
+
+    private val showUI: Runnable = Runnable {
         supportActionBar?.show()
         view_pager.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
         view_pager.visibility = View.VISIBLE
     }
 
-    val captionFullscreenOffset: Float = 100 * Resources.getSystem().displayMetrics.density
-
-    val itemClickListener = object : GalleryAdapter.ItemClickListener {
+    private val itemClickListener = object : GalleryAdapter.ItemClickListener {
         override fun onItemClick(captionView: View) {
             if (isFullscreen) {
                 captionView.animate().translationY(0F)
@@ -62,12 +63,13 @@ class GalleryActivity : AppCompatActivity() {
         }
     }
 
-    var items = mutableListOf<Item>()
-    var selectedItem: Int = 0
+    private var items = mutableListOf<Entry>()
+    private var selectedItem: Int = 0
+    private lateinit var adapter: GalleryAdapter
+    private lateinit var makeFavouriteIcon: Drawable
+    private lateinit var isFavoriteIcon: Drawable
+
     var isFavourite: Boolean = false
-    lateinit var adapter: GalleryAdapter
-    lateinit var makeFavouriteIcon: Drawable
-    lateinit var isFavoriteIcon: Drawable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -130,23 +132,21 @@ class GalleryActivity : AppCompatActivity() {
     }
 
     fun checkIfFavourite(position: Int): Boolean {
-        val item = items[position]
-
         val result: RealmResults<Favourite>? = PlaneSpotterApp.instance.realm
                 .where(Favourite::class.java)
-                .equalTo("thumbnailUrl", item.thumbnail.url)
+                .equalTo("originalUrl", items[position].originalUrl)
                 .findAll()
 
-        if (result?.size == 1) {
+        return if (result?.size == 1) {
             menu?.getItem(0)?.icon = isFavoriteIcon
-            return true
+            true
         } else {
             menu?.getItem(0)?.icon = makeFavouriteIcon
-            return false
+            false
         }
     }
 
-    fun addFavourite() {
+    private fun addFavourite() {
         val item = items[view_pager.currentItem]
 
         PlaneSpotterApp.instance.realm.executeTransactionAsync(
@@ -155,9 +155,9 @@ class GalleryActivity : AppCompatActivity() {
                     val favourite = realmBackground.createObject(Favourite::class.java)
                     with(favourite) {
                         title = item.title
+                        content = item.content
                         description = item.description
-                        subject = item.subject
-                        thumbnailUrl = item.thumbnail.url
+                        originalUrl = item.originalUrl
                         createdDate = Date(System.currentTimeMillis())
                     }
                 },
@@ -173,7 +173,7 @@ class GalleryActivity : AppCompatActivity() {
         )
     }
 
-    fun removeFavourite() {
+    private fun removeFavourite() {
         val item = items[view_pager.currentItem]
 
         PlaneSpotterApp.instance.realm.executeTransactionAsync(
@@ -181,8 +181,9 @@ class GalleryActivity : AppCompatActivity() {
                     realm ->
                     val result: RealmResults<Favourite> = realm
                             .where(Favourite::class.java)
-                            .equalTo("thumbnailUrl", item.thumbnail.url)
+                            .equalTo("originalUrl", item.originalUrl)
                             .findAll()
+
                     result.deleteFirstFromRealm()
                 },
                 {
