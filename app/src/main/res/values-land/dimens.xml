@@ -1,3 +1,4 @@
 <resources>
     <dimen name="list_image_height">152dp</dimen>
+    <dimen name="caption_height">90dp</dimen>
 </resources>

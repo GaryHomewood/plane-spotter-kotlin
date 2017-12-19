@@ -16,13 +16,10 @@ import uk.co.garyhomewood.planespotter.di.Injector
 import uk.co.garyhomewood.planespotter.gallery.GalleryActivity
 import uk.co.garyhomewood.planespotter.model.atom.Entry
 
-/**
- *
- */
-class FeedFragment : Fragment(), FeedInterface.View {
+private const val KEY_ITEMS = "KEY_ITEMS"
+private const val KEY_SELECTED_ITEM = "KEY_SELECTED_ITEM"
 
-    private val KEY_ITEMS = "KEY_ITEMS"
-    private val KEY_SELECTED_ITEM = "KEY_SELECTED_ITEM"
+class FeedFragment : Fragment(), FeedInterface.View {
 
     private var favourites: Boolean = false
     private var itemClickListener = object : FeedAdapter.ItemClickListener {

@@ -1,4 +1,5 @@
 <resources>
     <dimen name="appbar_padding_top">8dp</dimen>
     <dimen name="list_image_height">136dp</dimen>
+    <dimen name="caption_height">140dp</dimen>
 </resources>

@@ -10,9 +10,6 @@ import uk.co.garyhomewood.planespotter.R
 import uk.co.garyhomewood.planespotter.feed.FeedAdapter.ViewHolder
 import uk.co.garyhomewood.planespotter.model.atom.Entry
 
-/**
- *
- */
 class FeedAdapter(var planes: List<Entry>,
                   private var itemClickListener: FeedAdapter.ItemClickListener) : android.support.v7.widget.RecyclerView.Adapter<ViewHolder>() {
 

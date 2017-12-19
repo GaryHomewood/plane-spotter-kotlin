@@ -1,6 +1,5 @@
 package uk.co.garyhomewood.planespotter.gallery
 
-import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
@@ -20,21 +19,12 @@ import uk.co.garyhomewood.planespotter.model.Favourite
 import uk.co.garyhomewood.planespotter.model.atom.Entry
 import java.util.*
 
+private const val KEY_ITEMS = "KEY_ITEMS"
+private const val KEY_SELECTED_ITEM = "KEY_SELECTED_ITEM"
+private const val UI_ANIMATION_DELAY: Long = 100
 
-/**
- *
- */
 class GalleryActivity : AppCompatActivity() {
 
-    private val KEY_ITEMS = "KEY_ITEMS"
-    private val KEY_SELECTED_ITEM = "KEY_SELECTED_ITEM"
-    private val UI_ANIMATION_DELAY: Long = 100
-
-    var isFullscreen = false
-    val captionFullscreenOffset: Float = 100 * Resources.getSystem().displayMetrics.density
-
-    private var menu: Menu? = null
-    private val fullScreenHandler = Handler()
     private val hideUI: Runnable = Runnable {
         supportActionBar?.hide()
         view_pager.systemUiVisibility = (View.SYSTEM_UI_FLAG_LOW_PROFILE
@@ -63,6 +53,8 @@ class GalleryActivity : AppCompatActivity() {
         }
     }
 
+    private val fullScreenHandler = Handler()
+    private var menu: Menu? = null
     private var items = mutableListOf<Entry>()
     private var selectedItem: Int = 0
     private lateinit var adapter: GalleryAdapter
@@ -70,10 +62,14 @@ class GalleryActivity : AppCompatActivity() {
     private lateinit var isFavoriteIcon: Drawable
 
     var isFavourite: Boolean = false
+    var isFullscreen = false
+    var captionFullscreenOffset: Float = 0.0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
+
+        captionFullscreenOffset = resources.getDimension(R.dimen.caption_height)
 
         items = Parcels.unwrap(intent.getParcelableExtra(KEY_ITEMS))
         selectedItem = intent.getIntExtra(KEY_SELECTED_ITEM, 0)

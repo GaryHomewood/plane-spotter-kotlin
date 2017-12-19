@@ -10,9 +10,6 @@ import kotlinx.android.synthetic.main.gallery_item.view.*
 import uk.co.garyhomewood.planespotter.R
 import uk.co.garyhomewood.planespotter.model.atom.Entry
 
-/**
- *
- */
 class GalleryAdapter (private val context: Context,
                       private val items: List<Entry>,
                       val clickListener: ItemClickListener) : PagerAdapter() {
